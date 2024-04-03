@@ -18,6 +18,7 @@ tables = soup.find_all('table')
 
 # Diretório onde os arquivos CSV serão salvos
 directory = 'C:/Users/55119/Documents/Mackenzie/Semestre 2/ProjetoAplicadoI/Projeto-Aplicad'
+directory = r'C:\Users\55119\Documents\Mackenzie\Semestre 2\ProjetoAplicadoI\ProjetoAplicadoI'
 
 # Verifica se o diretório existe; se não, cria o diretório
 if not os.path.exists(directory):
