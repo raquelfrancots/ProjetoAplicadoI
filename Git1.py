@@ -17,32 +17,29 @@ soup = BeautifulSoup(html, 'html.parser')
 tables = soup.find_all('table')
 
 # Diretório onde os arquivos CSV serão salvos
-directory = 'C:/Users/55119/Documents/Mackenzie/Semestre 2/ProjetoAplicadoI/Projeto-Aplicad'
+directory = r'C:\Users\55119\Documents\Mackenzie\Semestre 2\ProjetoAplicadoI\ProjetoAplicadoI'
+csv_file = os.path.join(directory, 'todas_tabelas.csv')  # Nome do arquivo CSV
 
 # Verifica se o diretório existe; se não, cria o diretório
 if not os.path.exists(directory):
     os.makedirs(directory)
 
-# Loop pelas tabelas encontradas
-for idx, table in enumerate(tables, start=1):
-    # Inicializa uma lista vazia para armazenar os dados da tabela
-    table_data = []
+# Abre o arquivo CSV para escrita
+with open(csv_file, 'w', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
 
-    # Loop pelas linhas da tabela
-    for row in table.find_all('tr'):
-        # Obtém os textos das células em cada linha e armazena em uma lista
-        row_data = [cell.get_text(strip=True) for cell in row.find_all(['td', 'th'])]
-        # Adiciona a lista de dados da linha à lista de dados da tabela
-        table_data.append(row_data)
+    # Loop pelas tabelas encontradas
+    for idx, table in enumerate(tables, start=1):
+        table_data = []
+        for row in table.find_all('tr'):
+            row_data = [cell.get_text(strip=True) for cell in row.find_all(['td', 'th'])]
+            table_data.append(row_data)
 
-    # Define o nome do arquivo CSV
-    csv_file = os.path.join(directory, f'tabela_{idx}.csv')
+        # Escreve os dados da tabela no arquivo CSV se houver dados
+        if table_data:
+            for row_data in table_data:
+                writer.writerow(row_data)
+        else:
+            print(f'Tabela {idx} está vazia e não foi incluída.')
 
-    # Escreve os dados no arquivo CSV
-    with open(csv_file, 'w', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        # Escreve os dados da tabela no arquivo CSV
-        for row_data in table_data:
-            writer.writerow(row_data)
-
-    print(f'Dados da tabela {idx} salvo em {csv_file}')
+print(f'Todos os dados foram salvos em {csv_file}')
